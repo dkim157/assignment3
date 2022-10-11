@@ -65,6 +65,11 @@ def attack_1(p, g):
     A.make_hash()
     B.make_hash()
 
+    print(A.secret_key)
+    print(B.secret_key)
+    print(A.hash)
+    print(B.hash)
+
     # test A->B
     print("Exchange A->B")
     exchange_message(A, B)
@@ -136,5 +141,5 @@ if __name__=='__main__':
     p = int.from_bytes(rand.choice(p_list), byteorder='big')    # random value from p_list turned int
     g = int.from_bytes(rand.choice(g_list), byteorder='big')    # random value from g_list turned int
 
-    #attack_1(p, g)  # demonstrates attack 1
-    attack_2(p, g)  # demonstrates attack 2
+    attack_1(p, g)  # demonstrates attack 1
+    #attack_2(p, g)  # demonstrates attack 2
