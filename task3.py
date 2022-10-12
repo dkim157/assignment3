@@ -47,7 +47,7 @@ import random as rand
 
 # USER B:
 #   picks random element x < n this is the secret key to be shared
-#   create y = RSA(A_public, x)
+#   create y = RSA(A_public, x) this is the encrypted secret key
 
 # user B sends y to user A
 
@@ -83,6 +83,7 @@ class User:
         self.hash = None
 
     def generate_private_key(self):
+        # solves for d and assigns to private key when d*e (mod phi(n)) = 1
         self.private_key = pow(self.public_key, -1, self.phi)
         return None
 
@@ -103,26 +104,24 @@ class User:
             return self.hash
 
     def make_secret_key(self, pub_key):
-        secret_key = rand.randint(2, pub_key[1])
-        self.secret_key = secret_key
+        secret_key = rand.randint(2, pub_key[1])        # chooses secret key
+        self.secret_key = secret_key                    # assigns secret key to self
+        # encrypt secret key with given public key pait
         enc_secret = encrypt_msg(secret_key, pub_key)
-        return enc_secret
+        return enc_secret                               # returns encrypted secret key
 
     def decrypt_msg(self, ct):
         pt = pow(pow(ct, self.private_key), 1, self.common_key)
         return pt
 
 
-def encrypt_msg(msg, public_key):
-    int_msg = msg
-    if int_msg >= public_key[1]:
+def encrypt_msg(msg, public_key):   # RSA encrypts message with given public key pair
+    if msg >= public_key[1]:    # checks if plaintext larger than n
         print("message too big")
         print(int_msg)
         print(public_key[1])
         return
-    # pow(msg, receiver.public_key, receiver.common_key)
-    # pow(int_msg, public_key[0]) % public_key[1]
-    ciphertext = pow(pow(int_msg, public_key[0]), 1, public_key[1])
+    ciphertext = pow(pow(msg, public_key[0]), 1, public_key[1])
     return ciphertext
 
 
@@ -143,41 +142,36 @@ def aes_decrypt_msg(ct, reciever, iv):
 
 
 def exchange_key(A, B):
-    public_A = (A.public_key, A.common_key)
+    public_A = (A.public_key, A.common_key)  # creates A public key pair
+    # B creates a secret key and encrypts with A's public key
     y = B.make_secret_key(public_A)
-    A.secret_key = A.decrypt_msg(y)
-    A.make_hash()
+    A.secret_key = A.decrypt_msg(y)     # A decrypts secret key and saves it
+    A.make_hash()       # A and B hash identical secret keys
     B.make_hash()
-    a_msg = "Hi Bob!"
-    b_msg = "Hi Alice!"
-    send_msg(a_msg, A, B)
-    send_msg(b_msg, B, A)
+    a_msg = "Hi Bob!"   # A's message to B
+    b_msg = "Hi Alice!"  # B's message to A
+    send_msg(a_msg, A, B)   # A sends and encrypts message to B and B decrypts
+    send_msg(b_msg, B, A)   # B sends and encrypts message to A and A decrypts
 
 
 def send_msg(msg, sender, receiver):
     print(f'msg: {msg}')
     iv = get_random_bytes(16)
-    ct = aes_encrypt_msg(msg, sender, iv)
+    ct = aes_encrypt_msg(msg, sender, iv)   # sender encrypts message
     print(f'ct: {ct}')
-    enc = aes_decrypt_msg(ct, receiver, iv)
+    enc = aes_decrypt_msg(ct, receiver, iv)  # receiver decrypts ciphertext
     print(f'enc: {enc}')
 
 
-def str_to_int(msg):       # converts str msg to int
-    ascii_list = [str(hex(ord(c)))[2:] for c in msg]
-    ascii_str = ''.join(ascii_list)
-    int_msg = int(ascii_str, 16)
-    return int_msg
-
-
 def mallory_attack(A, B):
-    public_A = (A.public_key, A.common_key)
-    c = B.make_secret_key(public_A)
+    public_A = (A.public_key, A.common_key)  # creates A's public key pair
+    c = B.make_secret_key(public_A)         # B encrypts secret key for A
     print(f'bob ct: {c}')
-    mal_msg = rand.randint(2, A.common_key - 1)
+    mal_msg = rand.randint(2, A.common_key - 1)  # mallory creates new message
+    # mallory encrypts their msg to send to A
     mal_ct = encrypt_msg(mal_msg, public_A)
     print(f'mallory ct: {mal_ct}')
-    a_pt = A.decrypt_msg(mal_ct)
+    a_pt = A.decrypt_msg(mal_ct)                # A decrypts mallory's message
     print(f'alice decrypt: {a_pt}')
     print(f'mallory s: {mal_msg}')
 
