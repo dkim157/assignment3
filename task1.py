@@ -86,19 +86,11 @@ def exchange_message(A, B):
         print("Message recieved: %s" % plaintext)   # prints recieved message if they're identical
 
 if __name__=='__main__':
-    p_list = [b'0xB10B8F96', b'0xA080E01D', b'0xDE92DE5E', b'0xAE5D54EC', b'0x52C99FBC', b'0xFB06A3C69A6A9DCA', 
-        b'0x52D23B61', b'0x6073E286', b'0x75A23D18', b'0x9838EF1E', b'0x2EE652C013ECB4AE', b'0xA9061123', 
-        b'0x24975C3C', b'0xD49B83BF', b'0xACCBDD7D', b'0x90C4BD7098488E9C', b'0x219A7372', b'0x4EFFD6FA', 
-        b'0xE5644738', b'0xFAA31A4F', b'0xF55BCCC0A151AF5F', b'0x0DC8B4BD', b'0x45BF37DF', b'0x365C1A65', 
-        b'0xE68CFDA7', b'0x6D4DA708DF1FB2BC', b'0x2E4A4371']  # list of prime numbers p
-    g_list = [b'0xA4D1CBD5', b'0xC3FD3412', b'0x6765A442', b'0xEFB99905', b'0xF8104DD2', b'0x58AC507F', b'0xD6406CFF',
-        b'0x14266D31', b'0x266FEA1E', b'0x5C41564B', b'0x777E690F', b'0x5504F213160217B4', b'0xB01B886A', b'0x5E91547F', 
-        b'0x9E2749F4', b'0xD7FBD7D3', b'0xB9A92EE1909D0D22', b'0x63F80A76', b'0xA6A24C08', b'0x7A091F53', b'0x1DBF0A01', 
-        b'0x69B6A28AD662A4D1', b'0x8E73AFA3', b'0x2D779D59', b'0x18D08BC8', b'0x858F4DCE', b'0xF97C2A24855E6EEB', 
-        b'0x22B3B2E5']   # list of primitive roots g
+    p = 0xB10B8F96A080E01DDE92DE5EAE5D54EC52C99FBCFB06A3C69A6A9DCA52D23B616073E28675A23D189838EF1E2EE652C013ECB4AEA906112324975C3CD49B83BFACCBDD7D90C4BD7098488E9C219A73724EFFD6FAE5644738FAA31A4FF55BCCC0A151AF5F0DC8B4BD45BF37DF365C1A65E68CFDA76D4DA708DF1FB2BC2E4A4371
+    g = 0xA4D1CBD5C3FD34126765A442EFB99905F8104DD258AC507FD6406CFF14266D31266FEA1E5C41564B777E690F5504F213160217B4B01B886A5E91547F9E2749F4D7FBD7D3B9A92EE1909D0D2263F80A76A6A24C087A091F531DBF0A0169B6A28AD662A4D18E73AFA32D779D5918D08BC8858F4DCEF97C2A24855E6EEB22B3B2E5
 
-    p = int.from_bytes(rand.choice(p_list), byteorder='big')    # random value from p_list turned int
-    g = int.from_bytes(rand.choice(g_list), byteorder='big')    # random value from g_list turned int
+    #p = int.from_bytes(rand.choice(p_list), byteorder='big')    # random value from p_list turned int
+    #g = int.from_bytes(rand.choice(g_list), byteorder='big')    # random value from g_list turned int
 
     A = User(p, g)  # create user A
     B = User(p, g)  # create user B
